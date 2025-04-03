@@ -1,6 +1,6 @@
 {
-  "name": "microscopic-gripping",
-  "productName": "microscopic-gripping",
+  "name": "microscopic gripping",
+  "productName": "Microscopic Gripping",
   "version": "0.1.0",
   "description": "My Electron application description",
   "main": "src/index.js",
@@ -31,6 +31,7 @@
     "@electron-forge/plugin-fuses": "^7.8.0",
     "@electron/fuses": "^1.8.0",
     "electron": "35.1.2",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "electron-reload": "^2.0.0-alpha.1"
   }
 }

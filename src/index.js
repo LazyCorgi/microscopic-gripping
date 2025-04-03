@@ -6,6 +6,10 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+require('electron-reload')(path.join(__dirname, 'index.html')), {
+  electron: path.join(__dirname, 'node_modules', '.bin', 'electron'),
+}
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
