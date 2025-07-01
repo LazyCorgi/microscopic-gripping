@@ -12,11 +12,14 @@ files:
 asarUnpack:
   - resources/**
 win:
+  icon: build/icons/mec.ico
   executableName: mec-ui
 nsis:
+  oneClick: false
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
+  allowToChangeInstallationDirectory: true
   createDesktopShortcut: always
 mac:
   entitlementsInherit: build/entitlements.mac.plist
