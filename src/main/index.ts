@@ -1,8 +1,10 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
-import net from 'net'
+import icon from '../../resources/MEC.png?asset'
+
+import { startReceiverServer } from './tcp/receiver'
+import { sendCurrentTimeToPort2333 } from './tcp/sender'
 
 function createWindow(): void {
   // Create the browser window.
@@ -54,28 +56,11 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
-  startNamedPipeSender() //
+  startReceiverServer()
 
-  // Named Pipe 发送当前时间（每秒发送）
-  function startNamedPipeSender(): void {
-    const pipeName = '\\\\.\\pipe\\mypipe' // C++端监听的命名管道名
-    const client = net.createConnection(pipeName, () => {
-      console.log('✅ Named pipe connected!')
-
-      setInterval(() => {
-        const now = new Date().toLocaleTimeString()
-        client.write(`Time: ${now}\n`)
-      }, 1000)
-    })
-
-    client.on('error', (err) => {
-      console.error('❌ Pipe error:', err)
-    })
-
-    client.on('end', () => {
-      console.log('🔌 Pipe connection closed.')
-    })
-  }
+  ipcMain.on('send-time', () => {
+    sendCurrentTimeToPort2333()
+  })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

@@ -1,26 +1,55 @@
-<script setup lang="ts">
-import Versions from './components/Versions.vue'
+<template>
+  <div class="container">
+    <button class="send-btn" @click="sendTime">发送当前时间到 2333</button>
+    <p>接收到的内容:</p>
+    <pre class="output">{{ received }}</pre>
+  </div>
+</template>
 
-const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+
+const received = ref('等待接收...')
+
+function sendTime(): void {
+  window.electronAPI.sendTimeToTcp()
+}
+
+onMounted(() => {
+  window.electronAPI.startTcpReceiver((msg) => {
+    received.value = msg
+  })
+})
 </script>
 
-<template>
-  <img alt="logo" class="logo" src="./assets/electron.svg" />
-  <div class="creator">Powered by electron-vite</div>
-  <div class="text">
-    Build an Electron app with
-    <span class="vue">Vue</span>
-    and
-    <span class="ts">TypeScript</span>
-  </div>
-  <p class="tip">Please try pressing <code>F12</code> to open the devTool</p>
-  <div class="actions">
-    <div class="action">
-      <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">Documentation</a>
-    </div>
-    <div class="action">
-      <a target="_blank" rel="noreferrer" @click="ipcHandle">Send IPC</a>
-    </div>
-  </div>
-  <Versions />
-</template>
+<style scoped>
+.container {
+  padding: 40px;
+  font-size: 18px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.send-btn {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.send-btn:hover {
+  background-color: #45a049;
+}
+
+.output {
+  margin-top: 20px;
+  color: black;
+  background-color: #f5f5f5;
+  padding: 12px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+}
+</style>
