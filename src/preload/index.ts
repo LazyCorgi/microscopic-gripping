@@ -1,10 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
-contextBridge.exposeInMainWorld('electronAPI', {
-  sendTimeToTcp: () => ipcRenderer.send('send-time'),
-  startTcpReceiver: (callback: (text: string) => void) => {
-    ipcRenderer.on('tcp-data', (_event, data) => {
-      callback(data)
-    })
+contextBridge.exposeInMainWorld('electron', {
+  ipcRenderer: {
+    send: ipcRenderer.send.bind(ipcRenderer),
+    on: ipcRenderer.on.bind(ipcRenderer),
+    removeListener: ipcRenderer.removeListener.bind(ipcRenderer)
   }
 })

@@ -2,22 +2,23 @@
   <div class="container">
     <button class="send-btn" @click="sendTime">发送当前时间到 2333</button>
     <p>接收到的内容:</p>
-    <pre class="output">{{ received }}</pre>
+    <pre class="output">{{ message }}</pre>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-const received = ref('等待接收...')
+const message = ref('等待中...')
 
-function sendTime(): void {
-  window.electronAPI.sendTimeToTcp()
+const sendTime = (): void => {
+  const now = new Date().toLocaleString()
+  window.electron.ipcRenderer.send('send-to-server', now)
 }
 
 onMounted(() => {
-  window.electronAPI.startTcpReceiver((msg) => {
-    received.value = msg
+  window.electron.ipcRenderer.on('tcp-data', (_, msg) => {
+    message.value = msg
   })
 })
 </script>

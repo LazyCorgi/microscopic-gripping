@@ -3,8 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/MEC.png?asset'
 
-import { startReceiverServer } from './tcp/receiver'
-import { sendCurrentTimeToPort2333 } from './tcp/sender'
+import { startTCPClient } from './tcp/client'
 
 function createWindow(): void {
   // Create the browser window.
@@ -16,7 +15,8 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      contextIsolation: true
     }
   })
 
@@ -56,11 +56,7 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
-  startReceiverServer()
-
-  ipcMain.on('send-time', () => {
-    sendCurrentTimeToPort2333()
-  })
+  startTCPClient()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
