@@ -27,11 +27,13 @@ code {
 }
 
 #app {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin-bottom: 80px;
+  html, body, #app {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 禁用页面滚动条 */
+  height: 100vh;
+  width: 100vw;
+}
 }
 
 .logo {
