@@ -5,7 +5,8 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-image: url('./wavy-lines.svg');
+  /* background-image: url('./background.jpg'); */
+  background-color: #f8f8f8;
   background-size: cover;
   user-select: none;
 }
@@ -26,14 +27,18 @@ code {
   font-size: 85%;
 }
 
+html,
+body,
 #app {
-  html, body, #app {
   margin: 0;
   padding: 0;
   overflow: hidden; /* 禁用页面滚动条 */
   height: 100vh;
   width: 100vw;
 }
+.v-application {
+  height: 100%;
+  overflow: hidden;
 }
 
 .logo {

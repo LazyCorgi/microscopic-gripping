@@ -1,6 +1,6 @@
 {
   "name": "mec-ui",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "An Electron application with Vue and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -23,6 +23,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^4.0.0",
+    "@mdi/font": "^7.4.47",
     "electron-updater": "^6.3.9",
     "vuetify": "^3.9.0"
   },
@@ -34,6 +35,7 @@
     "@vitejs/plugin-vue": "^5.2.3",
     "electron": "^35.1.5",
     "electron-builder": "^25.1.8",
+    "electron-reload": "2.0.0-alpha.1",
     "electron-vite": "^3.1.0",
     "eslint": "^9.24.0",
     "eslint-plugin-vue": "^10.0.0",
