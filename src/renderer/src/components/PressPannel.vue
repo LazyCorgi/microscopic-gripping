@@ -13,7 +13,16 @@
     </v-row>
 
     <v-row justify="center">
-      <v-btn color="primary" @click="handlePress">启动</v-btn>
+      <v-text-field
+        v-model.number="timeout"
+        label="持续时间"
+        type="number"
+        variant="underlined"
+        density="compact"
+        hide-details
+        style="max-width: 110px"
+      />
+      <v-btn color="primary" @click="handlePress">设置压强</v-btn>
     </v-row>
   </v-card>
 </template>
@@ -24,7 +33,7 @@ import { Commands, sendMessage } from '../utils/message'
 
 const pressure = ref<number>(0)
 let timeoutId: number | null = null
-let timeout = 5000
+let timeout = 5
 
 const handlePress = (): void => {
   if (pressure.value <= -1000 || pressure.value >= 1000) {
@@ -38,7 +47,7 @@ const handlePress = (): void => {
   timeoutId = window.setTimeout(() => {
     sendMessage(Commands.setPressure(0))
     timeoutId = null
-  }, timeout)
+  }, timeout * 1000)
 }
 </script>
 
