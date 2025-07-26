@@ -10,13 +10,16 @@
         </div>
       </div>
       <div class="lower d-flex flex-column" style="flex: 5; width: 100%; min-height: 0">
-        <div class="pa-1" style="height: 40%">
-          <press-pannel />
-          <!-- hhh -->
+        <div class="pa-1 d-flex flex-row" style="height: 40%; width: 100%">
+          <div style="flex: 3; height: 100%">
+            <press-pannel />
+          </div>
+          <div style="flex: 4; height: 100%">
+            <ai-control-pannel />
+          </div>
         </div>
-        <div style="height: 60%; background: #ffe082">
+        <div style="height: 60%">
           <log-viewer />
-          <!-- 888 -->
         </div>
       </div>
     </v-container>
@@ -28,7 +31,8 @@ import { onMounted, ref, nextTick } from 'vue'
 import MovePannel from './components/MovePannel.vue'
 import PressPannel from './components/PressPannel.vue'
 import LogViewer from './components/LogViewer.vue'
-import Vision from './components/Vision.vue'
+import Vision from './components/VisionPannel.vue'
+import AiControlPannel from './components/AiControlPannel.vue'
 
 const logs = ref<string[]>([])
 const logContainer = ref<HTMLElement | null>(null)

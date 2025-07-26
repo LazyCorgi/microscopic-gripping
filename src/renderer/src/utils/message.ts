@@ -41,7 +41,17 @@ export const Commands = {
     command: 'set_pressure',
     parameters: { pressure }
   }),
-  readPressure: (): Command => ({ index: 4, command: 'read_pressure', parameters: {} })
+  readPressure: (): Command => ({ index: 4, command: 'read_pressure', parameters: {} }),
+  loadModel: (path: string): Command => ({
+    index: 0,
+    command: 'load_model',
+    parameters: { path }
+  }),
+  toggleAi: (enable: boolean): Command => ({
+    index: 0,
+    command: 'ai_toggle',
+    parameters: { enable }
+  })
 }
 
 export { sendMessage }

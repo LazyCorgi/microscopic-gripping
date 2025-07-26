@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-6 fill-height" elevation="3">
+  <v-card class="d-flex flex-column align-center justify-center pa-6 fill-height" elevation="3">
     <v-row align="center" justify="center" class="mb-4">
       <v-text-field
         v-model.number="pressure"
@@ -12,7 +12,7 @@
       />
     </v-row>
 
-    <v-row justify="center">
+    <v-row align="center" justify="center">
       <v-text-field
         v-model.number="timeout"
         label="持续时间"

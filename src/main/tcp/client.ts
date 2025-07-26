@@ -1,6 +1,6 @@
 // client.ts
 import net from 'net'
-import { BrowserWindow, ipcMain } from 'electron'
+import { BrowserWindow, ipcMain, dialog } from 'electron'
 
 let socket: net.Socket | null = null
 let reconnectTimer: NodeJS.Timeout | null = null
@@ -64,4 +64,12 @@ ipcMain.on('send-to-server', (_, msg: string) => {
   } else {
     console.warn('[TCP] 发送失败：未连接')
   }
+})
+ipcMain.handle('select-model', async () => {
+  const { filePaths, canceled } = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{ name: 'AI 模型', extensions: ['onnx', 'pt', 'bin', 'engine'] }]
+  })
+
+  return canceled ? null : filePaths[0]
 })
