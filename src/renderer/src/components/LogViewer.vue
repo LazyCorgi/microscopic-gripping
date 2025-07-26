@@ -37,6 +37,8 @@ let logId = 0
 const logContainer = ref<HTMLElement | null>(null)
 
 const appendLog = (text: string, level: LogLevel = 'info'): void => {
+  let time = new Date().toLocaleString()
+  text = `[${time}] ${text}`
   logs.value.unshift({ id: logId++, text, level })
   if (logs.value.length > MAX_LINES) logs.value.splice(MAX_LINES)
 }
