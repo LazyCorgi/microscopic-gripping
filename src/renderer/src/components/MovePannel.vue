@@ -46,7 +46,7 @@
         <template v-if="selectedChannel === 0">
           <v-col v-for="n in [1, 2, 3]" :key="n" cols="4">
             <v-text-field
-              v-model="destinations[n - 1]"
+              v-model.number="destinations[n - 1]"
               :label="`坐标${n}`"
               type="number"
               density="compact"
@@ -59,7 +59,7 @@
         <template v-else>
           <v-col cols="4">
             <v-text-field
-              v-model="destinations[selectedChannel - 1]"
+              v-model.number="destinations[selectedChannel - 1]"
               :label="`坐标${selectedChannel}`"
               type="number"
               density="compact"
@@ -73,6 +73,7 @@
       <!-- Read / Shutdown -->
       <v-row justify="center">
         <v-btn class="ma-2" color="info" @click="readStatus">Read</v-btn>
+        <v-btn class="ma-2" color="warning" @click="clearFault">清除错误</v-btn>
         <v-btn class="ma-2" color="grey darken-2" @click="shutdown">关机</v-btn>
       </v-row>
     </template>
@@ -120,6 +121,10 @@ const destinations = ref<[number, number, number]>([0, 0, 0])
 // read 和 shutdown 操作
 const readStatus = (): void => {
   sendMessage(Commands.readTxPDO(selectedChannel.value))
+}
+
+const clearFault = (): void => {
+  sendMessage(Commands.clearFault())
 }
 
 const shutdown = (): void => {

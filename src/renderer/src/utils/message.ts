@@ -36,10 +36,10 @@ export const Commands = {
   }),
 
   // 泵控制器
-  setPressure: (pressure: number): Command => ({
+  setPressure: (pressure: number, channel: number = 4): Command => ({
     index: 4,
     command: 'set_pressure',
-    parameters: { pressure }
+    parameters: { channel, pressure }
   }),
   readPressure: (): Command => ({ index: 4, command: 'read_pressure', parameters: {} }),
   loadModel: (path: string): Command => ({

@@ -15,8 +15,10 @@
     <v-row align="center" justify="center">
       <v-text-field
         v-model.number="timeout"
-        label="持续时间"
+        label="持续时间(ms)"
         type="number"
+        :min="0"
+        :step="1000"
         variant="underlined"
         density="compact"
         hide-details
@@ -33,10 +35,10 @@ import { Commands, sendMessage } from '../utils/message'
 
 const pressure = ref<number>(0)
 let timeoutId: number | null = null
-let timeout = 5
+const timeout = ref<number>(5000)
 
 const handlePress = (): void => {
-  if (pressure.value <= -1000 || pressure.value >= 1000) {
+  if (pressure.value < -1000 || pressure.value > 1000) {
     return
   }
   sendMessage(Commands.setPressure(pressure.value))
@@ -47,7 +49,7 @@ const handlePress = (): void => {
   timeoutId = window.setTimeout(() => {
     sendMessage(Commands.setPressure(0))
     timeoutId = null
-  }, timeout * 1000)
+  }, timeout.value)
 }
 </script>
 

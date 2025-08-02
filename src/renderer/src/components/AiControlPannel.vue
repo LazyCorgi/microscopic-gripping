@@ -3,8 +3,8 @@
     <!-- 启停按钮 -->
     <v-btn
       :color="aiRunning ? 'red' : 'green'"
-      class="mb-4"
-      style="width: 200px; height: 60px; font-size: 18px"
+      class="mb-2"
+      style="width: 160px; height: 50px; font-size: 18px"
       @click="toggleAi"
     >
       {{ aiRunning ? '运行中 - 停止' : '启动 AI 模块' }}
@@ -17,7 +17,7 @@
     </v-btn>
 
     <!-- 选中路径预览 -->
-    <div v-if="modelPath" class="mt-2 text-caption" style="max-width: 300px; word-break: break-all">
+    <div v-if="modelPath" class="text-caption" style="max-width: 300px; word-break: break-all">
       当前模型：{{ modelPath }}
     </div>
   </v-card>
