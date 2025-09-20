@@ -3,7 +3,11 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/MEC.png?asset'
 
-import { startTCPClient } from './tcp/client'
+import { TCPClient } from './tcp/client'
+import { handleStart } from './handle/handle'
+
+const mechClient = new TCPClient({ host: '127.0.0.1', port: 2333, channel: 'mech' })
+const aiClient = new TCPClient({ host: '127.0.0.1', port: 2666, channel: 'ai' })
 
 function createWindow(): void {
   // Create the browser window.
@@ -56,7 +60,11 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
-  startTCPClient()
+  handleStart()
+  mechClient.start()
+  aiClient.start()
+  ipcMain.on('send-to-mech', (_, msg: string) => mechClient.send(msg))
+  ipcMain.on('send-to-ai', (_, msg: string) => aiClient.send(msg))
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -76,3 +84,7 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+app.on('before-quit', () => {
+  mechClient['socket']?.destroy()
+  aiClient['socket']?.destroy()
+})

@@ -62,17 +62,21 @@ const handleScroll = (): void => {
   // 可拓展滚动相关逻辑
 }
 
-// 单独定义 listener 以便移除
-const listener = (_: unknown, msg: string): void => {
-  appendLog(msg, 'info')
-}
-
 onMounted(() => {
-  window.electron?.ipcRenderer?.on?.('tcp-data', listener)
+  const channels = ['mech', 'ai']
+
+  for (const ch of channels) {
+    window.electron?.ipcRenderer?.on(ch, (_, msg) => {
+      appendLog(`[${ch}] ${msg}`, 'info')
+    })
+  }
 })
 
 onUnmounted(() => {
-  window.electron?.ipcRenderer?.removeListener?.('tcp-data', listener)
+  const channels = ['mech', 'ai']
+  for (const ch of channels) {
+    window.electron?.ipcRenderer?.removeAllListeners(ch)
+  }
 })
 </script>
 

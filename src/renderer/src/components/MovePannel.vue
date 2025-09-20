@@ -7,14 +7,14 @@
           value="move"
           color="primary"
           depressed
-          @click="sendMessage(Commands.changeMode('to_csp'))"
+          @click="mechMessage(Commands.changeMode('to_csp'))"
           >运动模式</v-btn
         >
         <v-btn
           value="home"
           color="primary"
           depressed
-          @click="sendMessage(Commands.changeMode('to_home'))"
+          @click="mechMessage(Commands.changeMode('to_home'))"
           >回程模式</v-btn
         >
       </v-btn-toggle>
@@ -90,21 +90,21 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { Commands, sendMessage } from '../utils/message'
+import { Commands, mechMessage } from '../utils/MechMessage'
 
 type ModeType = 'move' | 'home'
 const mode = ref<ModeType>('move')
 
 // 运动模式：控制逻辑
 const handleMove = (action: 'start' | 'stop'): void => {
-  sendMessage(Commands.changeMode('to_csp'))
-  sendMessage(Commands.cspMove(destinations.value as [number, number, number], action))
+  mechMessage(Commands.changeMode('to_csp'))
+  mechMessage(Commands.cspMove(destinations.value as [number, number, number], action))
 }
 
 // 回程模式：控制逻辑
 const handleHome = (action: 'start' | 'stop'): void => {
-  sendMessage(Commands.changeMode('to_home'))
-  sendMessage(Commands.home(action))
+  mechMessage(Commands.changeMode('to_home'))
+  mechMessage(Commands.home(action))
 }
 
 // 下拉选择通道：0-同时控制123，1-通道1，2-通道2，3-通道3
@@ -120,15 +120,15 @@ const destinations = ref<[number, number, number]>([0, 0, 0])
 
 // read 和 shutdown 操作
 const readStatus = (): void => {
-  sendMessage(Commands.readTxPDO(selectedChannel.value))
+  mechMessage(Commands.readTxPDO(selectedChannel.value))
 }
 
 const clearFault = (): void => {
-  sendMessage(Commands.clearFault())
+  mechMessage(Commands.clearFault())
 }
 
 const shutdown = (): void => {
-  sendMessage(Commands.shutdown())
+  mechMessage(Commands.shutdown())
 }
 </script>
 

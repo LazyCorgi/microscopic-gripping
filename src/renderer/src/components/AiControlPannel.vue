@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { Commands, sendMessage } from '../utils/message'
+import { Msg, aiMessage } from '../utils/AiMessage'
 
 const aiRunning = ref<boolean>(false)
 const modelPath = ref<string>('')
@@ -33,7 +33,7 @@ const modelPath = ref<string>('')
 /** 切换AI状态 */
 const toggleAi = (): void => {
   aiRunning.value = !aiRunning.value
-  sendMessage(Commands.toggleAi(aiRunning.value))
+  aiMessage(Msg.set(aiRunning.value ? 'start' : 'stop'))
 }
 
 /** 打开文件选择器 */
@@ -42,7 +42,7 @@ const selectModel = async (): Promise<void> => {
     const result = await window.electron?.ipcRenderer?.invoke?.('select-model')
     if (result && typeof result === 'string') {
       modelPath.value = result
-      sendMessage(Commands.loadModel(result))
+      aiMessage(Msg.loadModel(result))
     }
   } catch (err) {
     console.warn('模型选择失败', err)

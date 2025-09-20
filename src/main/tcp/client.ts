@@ -1,75 +1,74 @@
-// client.ts
+// tcpClient.ts
 import net from 'net'
-import { BrowserWindow, ipcMain, dialog } from 'electron'
+import { BrowserWindow } from 'electron'
 
-let socket: net.Socket | null = null
-let reconnectTimer: NodeJS.Timeout | null = null
+export interface TCPClientOptions {
+  host: string
+  port: number
+  reconnectInterval?: number
+  channel: string // IPC 通道名，用于区分不同模块
+}
 
-const HOST = '127.0.0.1'
-const PORT = 2333
-const RECONNECT_INTERVAL_MS = 1000
+export class TCPClient {
+  private socket: net.Socket | null = null
+  private reconnectTimer: NodeJS.Timeout | null = null
+  private buffer = ''
 
-function setupSocketEvents(sock: net.Socket): void {
-  let buffer = ''
-  sock.on('data', (data) => {
-    buffer += data.toString()
-    const parts = buffer.split('\n')
-    buffer = parts.pop() || ''
+  constructor(private options: TCPClientOptions) {}
 
-    for (const msg of parts) {
-      console.log('[TCP 收到]', msg)
-      const win = BrowserWindow.getAllWindows()[0]
-      win?.webContents.send('tcp-data', msg)
+  start(): void {
+    this.connect()
+  }
+
+  private connect(): void {
+    if (this.socket && !this.socket.destroyed) {
+      this.socket.destroy()
     }
-  })
+    console.log(`[TCP-${this.options.channel}] 连接 ${this.options.host}:${this.options.port}...`)
 
-  sock.on('error', (err) => {
-    console.error('[TCP 错误]', err)
-  })
+    this.socket = net.createConnection({ host: this.options.host, port: this.options.port }, () => {
+      console.log(`[TCP-${this.options.channel}] 已连接`)
+    })
 
-  sock.on('close', () => {
-    console.warn('[TCP 连接关闭，准备重连]')
-    scheduleReconnect()
-  })
-}
-
-function connect(): void {
-  if (socket && !socket.destroyed) {
-    socket.destroy()
+    this.setupEvents(this.socket)
   }
-  console.log(`[TCP] 尝试连接 ${HOST}:${PORT}...`)
-  socket = net.createConnection({ host: HOST, port: PORT }, () => {
-    console.log('[TCP] 已连接服务端')
-  })
-  setupSocketEvents(socket)
-}
 
-function scheduleReconnect(): void {
-  if (reconnectTimer) return
-  reconnectTimer = setTimeout(() => {
-    reconnectTimer = null
-    connect()
-  }, RECONNECT_INTERVAL_MS)
-}
+  private setupEvents(sock: net.Socket): void {
+    sock.on('data', (data) => {
+      this.buffer += data.toString()
+      const parts = this.buffer.split('\n')
+      this.buffer = parts.pop() || ''
 
-// 初始连接
-export function startTCPClient(): void {
-  connect()
-}
+      for (const msg of parts) {
+        console.log(`[TCP-${this.options.channel}] 收到:`, msg)
+        const win = BrowserWindow.getAllWindows()[0]
+        win?.webContents.send(this.options.channel, msg)
+      }
+    })
 
-// 前端请求发送消息
-ipcMain.on('send-to-server', (_, msg: string) => {
-  if (socket && !socket.destroyed) {
-    socket.write(msg + '\n')
-  } else {
-    console.warn('[TCP] 发送失败：未连接')
+    sock.on('error', (err) => {
+      console.error(`[TCP-${this.options.channel}] 错误`, err)
+    })
+
+    sock.on('close', () => {
+      console.warn(`[TCP-${this.options.channel}] 连接关闭，准备重连`)
+      this.scheduleReconnect()
+    })
   }
-})
-ipcMain.handle('select-model', async () => {
-  const { filePaths, canceled } = await dialog.showOpenDialog({
-    properties: ['openFile'],
-    filters: [{ name: 'AI 模型', extensions: ['onnx', 'pt', 'bin', 'engine'] }]
-  })
 
-  return canceled ? null : filePaths[0]
-})
+  private scheduleReconnect(): void {
+    if (this.reconnectTimer) return
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = null
+      this.connect()
+    }, this.options.reconnectInterval ?? 1000)
+  }
+
+  send(msg: string): void {
+    if (this.socket && !this.socket.destroyed) {
+      this.socket.write(msg + '\n')
+    } else {
+      console.warn(`[TCP-${this.options.channel}] 发送失败：未连接`)
+    }
+  }
+}

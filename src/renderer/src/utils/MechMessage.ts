@@ -6,11 +6,11 @@ type Command = {
   parameters: CommandParams
 }
 
-const sendMessage = (msg: Command): void => {
+const mechMessage = (msg: Command): void => {
   if (window.electron?.ipcRenderer?.send) {
-    window.electron.ipcRenderer.send('send-to-server', JSON.stringify(msg))
+    window.electron.ipcRenderer.send('send-to-mech', JSON.stringify(msg))
   } else {
-    console.warn('IPC send failed: window.electron.ipcRenderer not available.')
+    console.warn('IPC/mech send failed: window.electron.ipcRenderer not available.')
   }
 }
 
@@ -41,17 +41,7 @@ export const Commands = {
     command: 'set_pressure',
     parameters: { channel, pressure }
   }),
-  readPressure: (): Command => ({ index: 4, command: 'read_pressure', parameters: {} }),
-  loadModel: (path: string): Command => ({
-    index: 0,
-    command: 'load_model',
-    parameters: { path }
-  }),
-  toggleAi: (enable: boolean): Command => ({
-    index: 0,
-    command: 'ai_toggle',
-    parameters: { enable }
-  })
+  readPressure: (): Command => ({ index: 4, command: 'read_pressure', parameters: {} })
 }
 
-export { sendMessage }
+export { mechMessage }
