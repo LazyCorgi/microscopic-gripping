@@ -63,7 +63,7 @@ const handleScroll = (): void => {
 }
 
 onMounted(() => {
-  const channels = ['mech', 'ai']
+  const channels = ['mech', 'ai', 'cam']
 
   for (const ch of channels) {
     window.electron?.ipcRenderer?.on(ch, (_, msg) => {
@@ -73,7 +73,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  const channels = ['mech', 'ai']
+  const channels = ['mech', 'ai', 'cam']
   for (const ch of channels) {
     window.electron?.ipcRenderer?.removeAllListeners(ch)
   }

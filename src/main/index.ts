@@ -8,6 +8,7 @@ import { handleStart } from './handle/handle'
 
 const mechClient = new TCPClient({ host: '127.0.0.1', port: 2333, channel: 'mech' })
 const aiClient = new TCPClient({ host: '127.0.0.1', port: 2666, channel: 'ai' })
+const camClient = new TCPClient({ host: '127.0.0.1', port: 2999, channel: 'cam' })
 
 function createWindow(): void {
   // Create the browser window.
@@ -63,8 +64,10 @@ app.whenReady().then(() => {
   handleStart()
   mechClient.start()
   aiClient.start()
+  camClient.start()
   ipcMain.on('send-to-mech', (_, msg: string) => mechClient.send(msg))
   ipcMain.on('send-to-ai', (_, msg: string) => aiClient.send(msg))
+  ipcMain.on('send-to-cam', (_, msg: string) => camClient.send(msg))
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -87,4 +90,5 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
   mechClient['socket']?.destroy()
   aiClient['socket']?.destroy()
+  camClient['socket']?.destroy()
 })

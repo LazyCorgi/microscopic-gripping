@@ -19,6 +19,9 @@
       <div class="lower d-flex flex-column" style="flex: 5; width: 100%; min-height: 0">
         <div class="pa-1 d-flex flex-row" style="height: 40%; width: 100%">
           <div style="flex: 3; height: 100%">
+            <CamControlPannel />
+          </div>
+          <div style="flex: 3; height: 100%">
             <press-pannel />
           </div>
           <div style="flex: 4; height: 100%">
@@ -43,6 +46,7 @@ import PressPannel from './components/PressPannel.vue'
 import LogViewer from './components/LogViewer.vue'
 import Vision from './components/VisionPannel.vue'
 import AiControlPannel from './components/AiControlPannel.vue'
+import CamControlPannel from './components/CamControlPannel.vue'
 
 const logs = ref<string[]>([])
 const logContainer = ref<HTMLElement | null>(null)

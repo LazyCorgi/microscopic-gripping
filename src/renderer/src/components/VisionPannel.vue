@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const videoUrl = 'http://127.0.0.1:2999/video'
+const videoUrl = 'http://127.0.0.1:3001/video'
 const loadError = ref(false)
 
 const onVideoError = (): void => {

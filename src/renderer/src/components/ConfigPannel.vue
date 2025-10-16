@@ -36,8 +36,6 @@ function close(): void {
 const Kvalue = inject('Kvalue') as Ref<number>
 const testMode = inject('testMode') as Ref<boolean>
 
-console.log(testMode.value, Kvalue.value)
-
 async function saveKvalue(): Promise<void> {
   await window.config.set('move_k', Kvalue.value)
 }
