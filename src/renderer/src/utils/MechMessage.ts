@@ -36,10 +36,10 @@ export const Commands = {
   }),
 
   // 泵控制器
-  setPressure: (pressure: number, channel: number = 4): Command => ({
+  setPressure: (pressure: number, shaft_open_time_ms: number, channel: number = 4): Command => ({
     index: 4,
     command: 'set_pressure',
-    parameters: { channel, pressure }
+    parameters: { channel, pressure, shaft_open_time_ms }
   }),
   readPressure: (): Command => ({ index: 4, command: 'read_pressure', parameters: {} })
 }

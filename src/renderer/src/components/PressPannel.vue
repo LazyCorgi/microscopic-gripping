@@ -34,22 +34,13 @@ import { ref } from 'vue'
 import { Commands, mechMessage } from '../utils/MechMessage'
 
 const pressure = ref<number>(0)
-let timeoutId: number | null = null
 const timeout = ref<number>(5000)
 
 const handlePress = (): void => {
   if (pressure.value < -1000 || pressure.value > 1000) {
     return
   }
-  mechMessage(Commands.setPressure(pressure.value))
-
-  if (timeoutId) {
-    clearTimeout(timeoutId)
-  }
-  timeoutId = window.setTimeout(() => {
-    mechMessage(Commands.setPressure(0))
-    timeoutId = null
-  }, timeout.value)
+  mechMessage(Commands.setPressure(pressure.value, timeout.value))
 }
 </script>
 
