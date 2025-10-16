@@ -76,6 +76,7 @@
         <v-btn class="ma-2" color="warning" @click="clearFault">清除错误</v-btn>
         <v-btn class="ma-2" color="grey darken-2" @click="shutdown">关机</v-btn>
       </v-row>
+      <div v-if="testMode" style="color: red">[WARN] 正在使用测试模式</div>
     </template>
 
     <!-- 回程模式 -->
@@ -89,16 +90,22 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { inject, ref, type Ref } from 'vue'
 import { Commands, mechMessage } from '../utils/MechMessage'
 
 type ModeType = 'move' | 'home'
 const mode = ref<ModeType>('move')
 
+const Kvalue = inject('Kvalue') as Ref<number>
+const testMode = inject('testMode') as Ref<boolean>
+
 // 运动模式：控制逻辑
 const handleMove = (action: 'start' | 'stop'): void => {
   mechMessage(Commands.changeMode('to_csp'))
-  mechMessage(Commands.cspMove(destinations.value as [number, number, number], action))
+  let aim: number[] = destinations.value as [number, number, number]
+  if (!testMode.value) aim = aim.map((value) => value / Kvalue.value)
+
+  mechMessage(Commands.cspMove(aim, action))
 }
 
 // 回程模式：控制逻辑

@@ -1,4 +1,5 @@
 import { ipcMain, dialog } from 'electron'
+import store from '../store/Storage'
 
 export const handleStart = (): void => {
   ipcMain.handle('select-model', async () => {
@@ -8,5 +9,14 @@ export const handleStart = (): void => {
     })
 
     return canceled ? null : filePaths[0]
+  })
+  // 读取配置
+  ipcMain.handle('config:get', (_, key) => {
+    return store.get(key)
+  })
+
+  // 写入配置
+  ipcMain.handle('config:set', (_, key, value) => {
+    store.set(key, value)
   })
 }

@@ -1,5 +1,12 @@
 <template>
   <v-app>
+    <v-app-bar app flat color="primary" dark>
+      <v-toolbar-title class="middle">全自动细胞提取系统</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn icon @click="openConfig = !openConfig">
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
+    </v-app-bar>
     <v-container fluid class="pa-0 d-flex flex-column" style="height: 100%">
       <div class="upper d-flex" style="flex: 5; width: 100%">
         <div class="left-panel" style="width: 60%">
@@ -23,11 +30,14 @@
         </div>
       </div>
     </v-container>
+
+    <ConfigPannel v-model="openConfig" />
   </v-app>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, nextTick } from 'vue'
+import { onMounted, ref, nextTick, provide } from 'vue'
+import ConfigPannel from './components/ConfigPannel.vue'
 import MovePannel from './components/MovePannel.vue'
 import PressPannel from './components/PressPannel.vue'
 import LogViewer from './components/LogViewer.vue'
@@ -37,6 +47,18 @@ import AiControlPannel from './components/AiControlPannel.vue'
 const logs = ref<string[]>([])
 const logContainer = ref<HTMLElement | null>(null)
 const maxLines = 10000
+const openConfig = ref(false)
+
+const testMode = ref<boolean>(false)
+const Kvalue = ref<number>(1)
+provide('testMode', testMode)
+provide('Kvalue', Kvalue)
+onMounted(async () => {
+  const savedk = await window.config.get('move_k')
+  if (typeof savedk === 'number') Kvalue.value = savedk
+  const savedm = await window.config.get('testmode')
+  if (typeof savedm === 'boolean') testMode.value = savedm
+})
 
 function appendLog(msg: string): void {
   logs.value.push(msg)

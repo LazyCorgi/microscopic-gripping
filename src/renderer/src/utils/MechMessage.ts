@@ -29,7 +29,7 @@ export const Commands = {
     command: 'home',
     parameters: { action }
   }),
-  cspMove: (destination: [number, number, number], action: 'start' | 'stop'): Command => ({
+  cspMove: (destination: number[], action: 'start' | 'stop'): Command => ({
     index: 0,
     command: 'csp',
     parameters: { destination, action }

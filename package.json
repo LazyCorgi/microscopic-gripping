@@ -1,6 +1,6 @@
 {
   "name": "mec-ui",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "An Electron application with Vue and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -24,6 +24,7 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^4.0.0",
     "@mdi/font": "^7.4.47",
+    "electron-store": "^8.2.0",
     "electron-updater": "^6.3.9",
     "vuetify": "^3.9.0"
   },

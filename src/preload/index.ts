@@ -8,3 +8,8 @@ contextBridge.exposeInMainWorld('electron', {
     invoke: ipcRenderer.invoke.bind(ipcRenderer)
   }
 })
+
+contextBridge.exposeInMainWorld('config', {
+  get: (key: string) => ipcRenderer.invoke('config:get', key),
+  set: (key: string, value) => ipcRenderer.invoke('config:set', key, value)
+})
