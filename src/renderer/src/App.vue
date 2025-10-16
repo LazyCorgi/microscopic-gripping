@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, nextTick, provide } from 'vue'
+import { onMounted, ref, provide } from 'vue'
 import ConfigPannel from './components/ConfigPannel.vue'
 import MovePannel from './components/MovePannel.vue'
 import PressPannel from './components/PressPannel.vue'
@@ -48,9 +48,6 @@ import Vision from './components/VisionPannel.vue'
 import AiControlPannel from './components/AiControlPannel.vue'
 import CamControlPannel from './components/CamControlPannel.vue'
 
-const logs = ref<string[]>([])
-const logContainer = ref<HTMLElement | null>(null)
-const maxLines = 10000
 const openConfig = ref(false)
 
 const testMode = ref<boolean>(false)
@@ -64,29 +61,6 @@ onMounted(async () => {
   if (typeof savedm === 'boolean') testMode.value = savedm
 })
 
-function appendLog(msg: string): void {
-  logs.value.push(msg)
-  if (logs.value.length > maxLines) {
-    logs.value.splice(0, logs.value.length - maxLines)
-  }
-
-  nextTick(() => {
-    const el = logContainer.value
-    if (el) {
-      el.scrollTop = el.scrollHeight
-    }
-  })
-}
-
-onMounted(() => {
-  window.electron.ipcRenderer.on('tcp-data', (_, msg: string) => {
-    appendLog(msg)
-  })
-
-  window.electron.ipcRenderer.on('tcp-error', (_, msg: string) => {
-    appendLog(`[ERROR] ${msg}`)
-  })
-})
 </script>
 
 <style scoped>

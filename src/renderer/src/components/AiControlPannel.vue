@@ -24,8 +24,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { Msg, aiMessage } from '../utils/AiMessage'
+import { Commands, mechMessage } from '@renderer/utils/MechMessage'
 
 const aiRunning = ref<boolean>(false)
 const modelPath = ref<string>('')
@@ -48,6 +49,18 @@ const selectModel = async (): Promise<void> => {
     console.warn('模型选择失败', err)
   }
 }
+
+onMounted(() => {
+  window.electron?.ipcRenderer?.on('ai', (_, msg) => {
+    const data = JSON.parse(msg)
+    if (data.content === 'ai-move') {
+      mechMessage(Commands.cspMove(data.params, 'start'))
+    }
+  })
+})
+onUnmounted(() => {
+  window.electron?.ipcRenderer?.removeAllListeners('ai')
+})
 </script>
 
 <style scoped></style>
