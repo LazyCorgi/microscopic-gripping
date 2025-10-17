@@ -1,12 +1,5 @@
 <template>
   <v-app>
-    <v-app-bar app flat color="primary" dark>
-      <v-toolbar-title class="middle">全自动细胞提取系统</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn icon @click="openConfig = !openConfig">
-        <v-icon>mdi-cog</v-icon>
-      </v-btn>
-    </v-app-bar>
     <v-container fluid class="pa-0 d-flex flex-column" style="height: 100%">
       <div class="upper d-flex" style="flex: 5; width: 100%">
         <div class="left-panel" style="width: 60%">
@@ -33,7 +26,9 @@
         </div>
       </div>
     </v-container>
-
+    <v-btn icon color="primary" class="settings-btn" @click="openConfig = !openConfig">
+      <v-icon>mdi-cog</v-icon>
+    </v-btn>
     <ConfigPannel v-model="openConfig" />
   </v-app>
 </template>
@@ -60,25 +55,14 @@ onMounted(async () => {
   const savedm = await window.config.get('testmode')
   if (typeof savedm === 'boolean') testMode.value = savedm
 })
-
 </script>
 
 <style scoped>
-.log-text {
-  font-family: monospace;
-  font-size: 13px;
-  white-space: pre-wrap;
-  word-break: break-word;
-  line-height: 1.4;
-  color: #333;
-}
-
-.log-error {
-  color: #d32f2f;
-  font-weight: bold;
-}
-
-.log-warn {
-  color: #f9a825;
+.settings-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 2000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 </style>
