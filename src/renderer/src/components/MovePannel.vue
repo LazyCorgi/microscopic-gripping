@@ -24,8 +24,10 @@
     <template v-if="mode === 'move'">
       <!-- 启动/停止 -->
       <v-row class="mb-2" justify="center">
-        <v-btn class="ma-2" color="success" @click="handleMove('start')">启动</v-btn>
-        <v-btn class="ma-2" color="error" @click="handleMove('stop')">停止</v-btn>
+        <v-btn class="ma-2" color="success" @click="handleMove([...destinations.values()], 'start')"
+          >启动</v-btn
+        >
+        <v-btn class="ma-2" color="error" @click="handleMove([0, 0, 0], 'stop')">停止</v-btn>
       </v-row>
 
       <!-- 通道选择和参数 -->
@@ -100,9 +102,8 @@ const Kvalue = inject('Kvalue') as Ref<number>
 const testMode = inject('testMode') as Ref<boolean>
 
 // 运动模式：控制逻辑
-const handleMove = (action: 'start' | 'stop'): void => {
+const handleMove = (aim: number[], action: 'start' | 'stop'): void => {
   mechMessage(Commands.changeMode('to_csp'))
-  let aim: number[] = destinations.value as [number, number, number]
   if (!testMode.value) aim = aim.map((value) => value / Kvalue.value)
 
   mechMessage(Commands.cspMove(aim, action))
@@ -137,6 +138,7 @@ const clearFault = (): void => {
 const shutdown = (): void => {
   mechMessage(Commands.shutdown())
 }
+defineExpose({ handleMove })
 </script>
 
 <style scoped>
