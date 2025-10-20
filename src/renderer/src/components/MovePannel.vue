@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, type Ref } from 'vue'
+import { inject, onMounted, ref, type Ref } from 'vue'
 import { Commands, mechMessage } from '../utils/MechMessage'
 
 type ModeType = 'move' | 'home'
@@ -103,9 +103,7 @@ const testMode = inject('testMode') as Ref<boolean>
 
 // 运动模式：控制逻辑
 const handleMove = (aim: number[], action: 'start' | 'stop'): void => {
-  mechMessage(Commands.changeMode('to_csp'))
   if (!testMode.value) aim = aim.map((value) => value / Kvalue.value)
-
   mechMessage(Commands.cspMove(aim, action))
 }
 
@@ -139,6 +137,10 @@ const shutdown = (): void => {
   mechMessage(Commands.shutdown())
 }
 defineExpose({ handleMove })
+
+onMounted(() => {
+  mechMessage(Commands.changeMode('to_csp'))
+})
 </script>
 
 <style scoped>
