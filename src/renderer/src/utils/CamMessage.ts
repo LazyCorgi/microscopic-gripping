@@ -1,8 +1,7 @@
-type CommandParams = { [key: string]: string | number | string[] | number[] | boolean | null }
-
 type Message = {
-  content: string
-  parameters?: CommandParams
+  command: string
+  x: number
+  y: number
 }
 
 const camMessage = (msg: Message): void => {
@@ -14,7 +13,8 @@ const camMessage = (msg: Message): void => {
 }
 
 export const Msg = {
-  cammove: (destination: number[]): Message => ({ content: 'cammove', parameters: { destination } })
+  cammove: (dx: number, dy: number): Message => ({ command: 'move', x: dx, y: dy }),
+  camhome: (): Message => ({ command: 'home', x: 0, y: 0 })
 }
 
 export { camMessage }

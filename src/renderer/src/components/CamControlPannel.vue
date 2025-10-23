@@ -33,7 +33,8 @@
 
     <!-- 第二行：发送按钮 -->
     <v-row align="center" class="mt-2">
-      <v-btn color="primary" @click="camMessage(Msg.cammove([x / 100, y / 100]))"> 发送 </v-btn>
+      <v-btn color="primary" class="mr-4" @click="camMessage(Msg.cammove(x, y))"> 发送 </v-btn>
+      <v-btn color="grey" @click="camMessage(Msg.camhome())"> 回原点 </v-btn>
     </v-row>
   </v-container>
 </template>
