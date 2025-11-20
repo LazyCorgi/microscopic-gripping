@@ -6,7 +6,7 @@
         <v-text-field
           v-model.number="x"
           label="x (%)"
-          type="number"
+          type="float"
           variant="outlined"
           density="compact"
           hide-details
@@ -19,7 +19,7 @@
         <v-text-field
           v-model.number="y"
           label="y (%)"
-          type="number"
+          type="float"
           variant="outlined"
           density="compact"
           hide-details
