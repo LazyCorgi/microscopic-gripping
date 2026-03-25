@@ -6,7 +6,8 @@
         <v-text-field
           v-model.number="x"
           label="x (%)"
-          type="float"
+          type="number"
+          step="1"
           variant="outlined"
           density="compact"
           hide-details
@@ -19,13 +20,14 @@
         <v-text-field
           v-model.number="y"
           label="y (%)"
-          type="float"
+          type="number"
+          step="1"
           variant="outlined"
           density="compact"
           hide-details
           min="0"
           max="100"
-          @blur="validateX"
+          @blur="validateY"
         />
       </v-col>
       <v-col cols="4">
@@ -37,6 +39,7 @@
           density="compact"
           hide-details
           min="0"
+          @blur="validateZ"
         />
       </v-col>
     </v-row>
@@ -59,8 +62,19 @@ const y = ref<number>(0)
 const z = ref<number>(0)
 
 function validateX(): void {
-  if (x.value > 100) x.value = 100
+  x.value = Math.round(x.value)
+  // if (x.value > 100) x.value = 100
   if (x.value < 0) x.value = 0
+}
+
+function validateY(): void {
+  y.value = Math.round(y.value)
+  // if (y.value > 100) y.value = 100
+  if (y.value < 0) y.value = 0
+}
+
+function validateZ(): void {
+  if (z.value < 0) z.value = 0
 }
 
 onMounted(() => {
