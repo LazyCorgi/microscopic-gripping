@@ -3,7 +3,7 @@
     <v-container fluid class="pa-0 d-flex flex-column" style="height: 100%">
       <div class="upper d-flex" style="flex: 5; width: 100%">
         <div class="left-panel" style="width: 60%">
-          <vision @video-click="({ x, y }) => moveRef?.handleMove([x, y, 0], 'start')" />
+          <vision />
         </div>
         <div class="right-panel" style="width: 40%">
           <move-pannel ref="moveRef" />
@@ -44,7 +44,6 @@ import AiControlPannel from './components/AiControlPannel.vue'
 import CamControlPannel from './components/CamControlPannel.vue'
 
 const openConfig = ref(false)
-const moveRef = ref<InstanceType<typeof MovePannel> | null>(null)
 
 const testMode = ref<boolean>(false)
 const Kvalue = ref<number>(1)

@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted, defineEmits } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { camMessage, Msg, currentX, currentY } from '@renderer/utils/CamMessage'
 
 const baseUrl = 'http://127.0.0.1:8080/video' // 你的 MJPEG 服务
 const loadError = ref(false)
@@ -42,9 +43,7 @@ const onVideoLoad = (): void => {
     retryTimer = null
   }
 }
-const emit = defineEmits<{
-  (e: 'video-click', payload: { x: number; y: number }): void
-}>()
+
 const videoRef = ref<HTMLImageElement | null>(null)
 const onClick = (event: MouseEvent): void => {
   if (!videoRef.value) return
@@ -94,14 +93,17 @@ const onClick = (event: MouseEvent): void => {
   }
 
   // 相对绘制区域内的位置（0~1）
-  const relX = (clickX - offsetX) / drawWidth
-  const relY = (clickY - offsetY) / drawHeight
+  const relX = (clickX - offsetX) / drawWidth - 0.5
+  const relY = (clickY - offsetY) / drawHeight - 0.5
 
   // 映射到原视频像素
   const pixelX = Math.round(relX * naturalWidth)
   const pixelY = Math.round(relY * naturalHeight)
 
-  emit('video-click', { x: pixelX, y: pixelY })
+  const targetX = pixelX + currentX.value
+  const targetY = pixelY + currentY.value
+
+  camMessage(Msg.cammove(targetX, targetY))
 }
 
 onMounted(() => {
