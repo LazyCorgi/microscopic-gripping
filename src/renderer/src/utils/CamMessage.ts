@@ -24,7 +24,11 @@ export const Msg = {
     return { command: 'move', x: dx, y: dy, z: 0 }
   },
   camfocus: (focal: number): Message => ({ command: 'focus', x: 0, y: 0, z: focal }),
-  camhome: (): Message => ({ command: 'home', x: 0, y: 0, z: 0 })
+  camhome: (): Message => {
+    currentX.value = 0
+    currentY.value = 0
+    return { command: 'home', x: 0, y: 0, z: 0 }
+  }
 }
 
 export { camMessage }

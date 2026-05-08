@@ -11,6 +11,14 @@
       <v-card-text>
         <v-switch v-model="testMode" color="primary" label="测试模式(无视K值)" @change="saveMode" />
         <v-text-field v-model.number="Kvalue" label="运动K值" type="number" @change="saveKvalue" />
+        <v-btn v-model="cali_x" color="primary" @click="cali_x = !cali_x">{{
+          cali_x ? '取消x轴校准' : 'x轴校准'
+        }}</v-btn>
+        <v-text-field v-model.number="cam_x" label="x轴校准" type="number" @change="saveCali" />
+        <v-btn v-model="cali_y" color="primary" @click="cali_y = !cali_y">{{
+          cali_y ? '取消y轴校准' : 'y轴校准'
+        }}</v-btn>
+        <v-text-field v-model.number="cam_y" label="y轴校准" type="number" @change="saveCali" />
       </v-card-text>
     </v-card>
   </transition>
@@ -41,6 +49,16 @@ async function saveKvalue(): Promise<void> {
 }
 async function saveMode(): Promise<void> {
   await window.config.set('testmode', testMode.value)
+}
+
+const cali_x = inject('cali_x') as Ref<boolean>
+const cali_y = inject('cali_y') as Ref<boolean>
+const cam_x = inject('cam_x') as Ref<number>
+const cam_y = inject('cam_y') as Ref<number>
+
+async function saveCali(): Promise<void> {
+  await window.config.set('cam_x', cam_x.value)
+  await window.config.set('cam_y', cam_y.value)
 }
 </script>
 

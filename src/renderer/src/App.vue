@@ -49,11 +49,23 @@ const testMode = ref<boolean>(false)
 const Kvalue = ref<number>(1)
 provide('testMode', testMode)
 provide('Kvalue', Kvalue)
+const cali_x = ref<boolean>(false)
+const cali_y = ref<boolean>(false)
+const cam_x = ref<number>(1)
+const cam_y = ref<number>(1)
+provide('cali_x', cali_x)
+provide('cali_y', cali_y)
+provide('cam_x', cam_x)
+provide('cam_y', cam_y)
 onMounted(async () => {
   const savedk = await window.config.get('move_k')
   if (typeof savedk === 'number') Kvalue.value = savedk
   const savedm = await window.config.get('testmode')
   if (typeof savedm === 'boolean') testMode.value = savedm
+  const savedx = await window.config.get('cam_x')
+  if (typeof savedx === 'number') cam_x.value = savedx
+  const savedy = await window.config.get('cam_y')
+  if (typeof savedy === 'number') cam_y.value = savedy
 })
 </script>
 

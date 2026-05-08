@@ -10,10 +10,11 @@
     />
     <div v-else class="no-signal">🚫 无信号</div>
   </div>
+  <div v-if="cali_x || cali_y" style="color: red">[WARN] 正在进行校准</div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, inject, type Ref } from 'vue'
 import { camMessage, Msg, currentX, currentY } from '@renderer/utils/CamMessage'
 
 const baseUrl = 'http://127.0.0.1:8080/video' // 你的 MJPEG 服务
@@ -22,6 +23,11 @@ let retryTimer: ReturnType<typeof setInterval> | null = null
 let refreshTimer: ReturnType<typeof setInterval> | null = null
 
 const computedUrl = computed(() => `${baseUrl}?t=${Date.now()}`)
+
+const cali_x = inject('cali_x') as Ref<boolean>
+const cali_y = inject('cali_y') as Ref<boolean>
+const cam_x = inject('cam_x') as Ref<number>
+const cam_y = inject('cam_y') as Ref<number>
 
 const reloadVideo = (): void => {
   loadError.value = false
@@ -101,9 +107,32 @@ const onClick = (event: MouseEvent): void => {
   const pixelY = Math.round(relY * naturalHeight)
 
   const targetX = pixelX + currentX.value
-  const targetY = pixelY + currentY.value
+  const targetY = -(pixelY + currentY.value)
 
-  camMessage(Msg.cammove(targetX, targetY))
+  if (!cali_x.value && !cali_y.value) {
+    camMessage(
+      Msg.cammove(
+        Math.round((targetX / cam_x.value) * 100),
+        Math.round((targetY / cam_y.value) * 100)
+      )
+    )
+  } else {
+    if (cali_x.value) saveCaliX(targetX)
+    if (cali_y.value) saveCaliY(targetY)
+    camMessage(Msg.camhome())
+  }
+}
+
+async function saveCaliX(targetX): Promise<void> {
+  cam_x.value = targetX
+  await window.config.set('cam_x', cam_x.value)
+  cali_x.value = false
+}
+
+async function saveCaliY(targetY): Promise<void> {
+  cam_y.value = targetY
+  await window.config.set('cam_y', cam_y.value)
+  cali_y.value = false
 }
 
 onMounted(() => {
