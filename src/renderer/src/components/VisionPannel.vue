@@ -1,5 +1,11 @@
 <template>
-  <div class="video-container" @click="onClick">
+  <div
+    class="video-container"
+    @click="onClick"
+    @mousemove="onMouseMove"
+    @mouseenter="isHovering = true"
+    @mouseleave="isHovering = false"
+  >
     <img
       v-if="!loadError"
       ref="videoRef"
@@ -9,6 +15,8 @@
       @load="onVideoLoad"
     />
     <div v-else class="no-signal">🚫 无信号</div>
+    <div v-show="isHovering" class="crosshair-h" :style="{ top: mouseY + 'px' }"></div>
+    <div v-show="isHovering" class="crosshair-v" :style="{ left: mouseX + 'px' }"></div>
   </div>
   <div v-if="cali_x || cali_y" style="color: red">[WARN] 正在进行校准</div>
 </template>
@@ -135,6 +143,17 @@ async function saveCaliY(targetY): Promise<void> {
   cali_y.value = false
 }
 
+const isHovering = ref(false)
+const mouseX = ref(0)
+const mouseY = ref(0)
+
+const onMouseMove = (event) => {
+  // 使用 getBoundingClientRect 确保坐标计算精确，避免子元素干扰
+  const rect = event.currentTarget.getBoundingClientRect()
+  mouseX.value = event.clientX - rect.left
+  mouseY.value = event.clientY - rect.top
+}
+
 onMounted(() => {
   refreshTimer = setInterval(() => {
     if (!loadError.value) {
@@ -180,5 +199,35 @@ onUnmounted(() => {
   background-color: #f8f8f8;
   font-size: 20px;
   flex-direction: column;
+}
+
+/* 确保父容器有 relative 定位，并建议将光标设为十字准星 */
+.video-container {
+  position: relative;
+  cursor: crosshair;
+  /* overflow: hidden; 可选，防止线超出容器边界 */
+}
+
+/* 十字线基础样式 */
+.crosshair-h,
+.crosshair-v {
+  position: absolute;
+  background-color: #00ff00; /* 细绿线 */
+  pointer-events: none; /* 关键：穿透鼠标事件，防止绿线遮挡并引起坐标跳动 */
+  z-index: 10; /* 确保线在视频上方 */
+}
+
+/* 水平线 */
+.crosshair-h {
+  width: 100%;
+  height: 1px;
+  left: 0;
+}
+
+/* 垂直线 */
+.crosshair-v {
+  height: 100%;
+  width: 1px;
+  top: 0;
 }
 </style>
